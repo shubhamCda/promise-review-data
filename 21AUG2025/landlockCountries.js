@@ -1,4 +1,7 @@
+import fs from "fs";
+import path from "path";
 import countries from "../countries.json" with {type: 'json'};
+
 
 // Filtering
 
@@ -28,7 +31,70 @@ const landlockCountryCapital = countries.reduce((country, { name, capital, landl
   return country;
 }, {});
 
-console.log(landlockCountryCapital);
+// console.log(landlockCountryCapital);
+
+
+
+
+
+const makeFolder = (dirPath, cb) => {
+  fs.mkdir(dirPath, { recursive: true }, (err) => {
+    if (err) {
+      console.error(err);
+      
+    } else {
+      cb("success");
+    }
+  })
+}
+
+const dirReader = (dirPath, cb) => {
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      return new Error("error: ", err);
+    } else {
+      cb(files);
+    }
+  })
+}
+
+const writeFile = (filePath, cb) => {
+  fs.writeFile(filePath, "", (err) => {
+    if (err) {
+      console.error(err);
+      
+    } else {
+      cb("success");
+    }
+  })
+}
+
+
+
+makeFolder("folder", (msg) => {
+  console.log(msg);
+  dirReader("folder", (files) => {
+    for (let country in landlockCountryCapital) {
+      if (!files.includes(country)) {
+        const fileDir = path.join("./folder", country);
+        makeFolder(fileDir, (msg) => {
+          console.log(msg);
+          const textFileDir = path.join(`./folder/${country}/${landlockCountryCapital[country]}.txt`);
+          console.log(textFileDir);
+          
+          writeFile(textFileDir, (msg) => {
+            console.log(msg);
+            
+          })
+
+          
+        })
+      }
+    }
+    
+  })
+  
+})
 
 
 
