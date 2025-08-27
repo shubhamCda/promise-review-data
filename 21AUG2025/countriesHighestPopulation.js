@@ -69,6 +69,16 @@ dirCreate("populated-countries", (msg) => {
                   
                 } else {
                   console.log(`deleted successfully: ${filePaths}`);
+
+                  fs.rm(`populated-countries/${region}`, { recursive: true, force: true }, (err) => {
+                    if (err) {
+                      console.error(err);
+                      
+                    } else {
+                      console.log("deleted successfully!");
+                      
+                    }
+                  })
                   
                 }
               })
