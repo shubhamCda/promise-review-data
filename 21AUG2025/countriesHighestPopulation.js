@@ -62,6 +62,16 @@ dirCreate("populated-countries", (msg) => {
 
             fileWriter(newJsonFilePath, `{"population": ${highestPopulationCountries[region].population}}`, (filePaths) => {
               console.log(filePaths);
+
+              fs.unlink(filePaths, (err) => {
+                if (err) {
+                  console.error("Error", err);
+                  
+                } else {
+                  console.log(`deleted successfully: ${filePaths}`);
+                  
+                }
+              })
               
             })
           })
