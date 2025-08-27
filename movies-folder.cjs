@@ -12,25 +12,28 @@ const movie_list_by_genre = movies.reduce((acc, movie) => {
 	return acc;
 }, {});
 
-create_directory("./movie-folder", () => {
-	movies.map((movie) => {
-		dirReader("./movie-folder", (file) => {
-			if (!file.includes(movie.Genre)) {
-				const folderPath = path.join("./movie-folder", movie.Genre);
-				create_directory(folderPath, () => {
-					const movieGenre = Object.keys(movie_list_by_genre);
-					movieGenre.forEach((G) => {
-						const filePath = path.join("./movie-folder", G, "moviesList.txt");
-						const fileContent = JSON.stringify(movie_list_by_genre[G]);
-						fileWriter(filePath, fileContent, () => {
-							console.log("operation success....");
-						});
-					});
-				});
-			}
-		});
-	});
-});
+console.log(movie_list_by_genre);
+
+
+// create_directory("./movie-folder", () => {
+// 	movies.map((movie) => {
+// 		dirReader("./movie-folder", (file) => {
+// 			if (!file.includes(movie.Genre)) {
+// 				const folderPath = path.join("./movie-folder", movie.Genre);
+// 				create_directory(folderPath, () => {
+// 					const movieGenre = Object.keys(movie_list_by_genre);
+// 					movieGenre.forEach((G) => {
+// 						const filePath = path.join("./movie-folder", G, "moviesList.txt");
+// 						const fileContent = JSON.stringify(movie_list_by_genre[G]);
+// 						fileWriter(filePath, fileContent, () => {
+// 							console.log("operation success....");
+// 						});
+// 					});
+// 				});
+// 			}
+// 		});
+// 	});
+// });
 
 function create_directory(dirPath, cb) {
 	fs.mkdir(dirPath, { recursive: true }, (err) => {

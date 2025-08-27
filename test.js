@@ -1,4 +1,4 @@
-import countries from "./countries.json" assert {type: 'json'};
+import countries from "./countries.json" with {type: 'json'};
 
 const highest_pop = countries.reduce((data, country) => {
   return country.population > data.population ? country : data;

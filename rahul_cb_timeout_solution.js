@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import data from './data.json' assert {type: "json"};
+import data from './data.json' with {type: "json"};
 
 const filePath = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filePath);
