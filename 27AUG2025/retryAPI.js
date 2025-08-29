@@ -1,22 +1,48 @@
-const retryAPI = (cb, maxRetries = 3, delayMS = 1000) => {
-  return new Promise((resolve, reject) => {
-    let retryCount = 0;
+const apiRetryFunc = (cb, maxRetries = 3, delayMS = 1000) => {
+	return new Promise((resolve, reject) => {
+		let retryCount = 0;
 
-    const apiCallFn = () => {
-      cb()
-        .then((data) => {
-          resolve({ data, retries });
-        }).catch((err) => {
-          retryCount++;
-          if (retryCount <= maxRetries) {
-            console.error(`API call failed. Retrying(${retryCount}/${maxRetries})....in ${delayMS}ms.`);
-            setTimeout(cb, timeout);
-            
-          } else {
-            console.error(`Final error. Retry(${retryCount}/${maxRetries}). API call STOP XXXXXXXX`);
-            
-          }
-        });
-    }
-  })
-}
+		const makeAPICall = () => {
+			cb()
+				.then((data) => {
+					resolve({ data, retryCount });
+				})
+				.catch((err) => {
+					retryCount++;
+					if (retryCount <= maxRetries) {
+						console.warn(
+							`Failed to call API. Retrying: ${retryCount}/${maxRetries} in ${delayMS}ms.`
+						);
+						setTimeout(makeAPICall, delayMS);
+					} else {
+						reject(
+							`Final error. Max retry (${maxRetries}) failed to call API.`
+						);
+					}
+				});
+		};
+		makeAPICall();
+	});
+};
+
+const randomNumGen = () => {
+	return new Promise((resolve, reject) => {
+		let randNum = Math.random();
+
+		if (randNum > 0.6) {
+			resolve(`Data: ${randNum.toFixed(2)} fetched successfully!!!`);
+		} else {
+			reject("data fetching failed!!!!");
+		}
+	});
+};
+
+apiRetryFunc(randomNumGen, 5, 1000)
+	.then(({ data, retryCount }) => {
+		console.log(
+			`Data fetched: ${data}. Maximum number of retries took to achieve result: ${retryCount}`
+		);
+	})
+	.catch((err) => {
+		console.log(err);
+	});
